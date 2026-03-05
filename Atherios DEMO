@@ -1,0 +1,1597 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Activity, 
+  Globe, 
+  Zap, 
+  ShieldCheck, 
+  Users, 
+  Menu,
+  X,
+  Database,
+  Hammer,
+  Gem,
+  Stethoscope,
+  Scale,
+  FileBadge,
+  Plus,
+  Sparkles,
+  Loader,
+  BrainCircuit,
+  FileText,
+  Wifi,
+  Server,
+  TrendingUp,
+  Send,
+  ShoppingBag,
+  Coins,
+  Filter,
+  BarChart4,
+  Code,
+  Terminal,
+  Briefcase,
+  AlertTriangle,
+  Wallet,
+  Play,
+  Pause,
+  History,
+  List,
+  CheckCircle2,
+  Clock,
+  Gauge,
+  Lock,
+  Unlock,
+  Radio,
+  FileCode,
+  ClipboardList,
+  Wrench,
+  Cpu,
+  Search,
+  Box
+} from 'lucide-react';
+import { 
+  LineChart, 
+  Line, 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  RadarChart, 
+  PolarGrid, 
+  PolarAngleAxis, 
+  PolarRadiusAxis, 
+  Radar,
+  Legend
+} from 'recharts';
+
+// --- STRATEGIC DATA SETS ---
+
+// Harvesting Data: Tracking Data Yield vs Token Generation
+const harvestYieldData = [
+  { time: '00:00', dataInflow: 450, tokenGen: 45, iotSync: 92 },
+  { time: '04:00', dataInflow: 580, tokenGen: 58, iotSync: 94 },
+  { time: '08:00', dataInflow: 890, tokenGen: 95, iotSync: 98 },
+  { time: '12:00', dataInflow: 1200, tokenGen: 140, iotSync: 99 },
+  { time: '16:00', dataInflow: 1100, tokenGen: 125, iotSync: 97 },
+  { time: '20:00', dataInflow: 950, tokenGen: 98, iotSync: 96 },
+  { time: '24:00', dataInflow: 600, tokenGen: 65, iotSync: 95 },
+];
+
+// Market Metrics for Regulatory/Financial Overview
+const marketMetrics = [
+  { subject: 'Liquidity', A: 130, fullMark: 150 },
+  { subject: 'Data Quality', A: 110, fullMark: 150 },
+  { subject: 'Grid Stability', A: 140, fullMark: 150 },
+  { subject: 'User Demand', A: 90, fullMark: 150 },
+  { subject: 'Securitization', A: 100, fullMark: 150 },
+  { subject: 'Asset Velocity', A: 115, fullMark: 150 },
+];
+
+// Asset Minting Categories
+const mintingCategories = [
+  { category: 'Therapeutic Scripts', volume: 650, value: '650k' },
+  { category: 'IoT Data Streams', volume: 820, value: '820k' },
+  { category: 'Financialized Algos', volume: 450, value: '450k' },
+  { category: 'BETS Protocols', volume: 300, value: '300k' },
+];
+
+const appTemplates = [
+  { title: 'Yield Optimizer', icon: TrendingUp, desc: 'Maximize token generation from connected IoT streams.', type: 'DeFi' },
+  { title: 'Data Harvester', icon: Database, desc: 'Deploy automated collectors for bio-metric signals.', type: 'Core' },
+  { title: 'Asset Minter', icon: Gem, desc: 'Tokenize therapeutic sessions into tradeable assets.', type: 'DeFi' },
+  { title: 'Grid Regulator', icon: Server, desc: 'Monitor IoT sync rates and financial compliance.', type: 'Core' },
+];
+
+// Market Agents (Financialized IoT Assets)
+const marketAgents = [
+  { id: 'A-101', name: 'Aura-V', type: 'Therapeutic', level: 3, price: '500 kJ', yield: '120/day', iotSync: 99, icon: Stethoscope },
+  { id: 'A-102', name: 'Data-9', type: 'Harvester', level: 2, price: '300 kJ', yield: '450/day', iotSync: 98, icon: Database },
+  { id: 'A-103', name: 'Yield-X', type: 'Financial', level: 4, price: '1200 kJ', yield: '800/day', iotSync: 95, icon: Coins },
+  { id: 'A-104', name: 'Grid-7', type: 'Regulatory', level: 3, price: '800 kJ', yield: '200/day', iotSync: 100, icon: ShieldCheck },
+  { id: 'A-105', name: 'Echo-Bio', type: 'Therapeutic', level: 2, price: '450 kJ', yield: '150/day', iotSync: 97, icon: Activity },
+  { id: 'A-106', name: 'Mint-4', type: 'Asset Gen', level: 3, price: '600 kJ', yield: '300/day', iotSync: 96, icon: Gem },
+];
+
+export default function AetheriosPrime() {
+  const [activeTab, setActiveTab] = useState('nexus');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [energyStandard, setEnergyStandard] = useState(1.000); 
+  const chatEndRef = useRef(null);
+
+  // --- GLOBAL STATE ---
+  const [userBalance, setUserBalance] = useState(50000); // Liquid kJ
+  const [stakedBalance, setStakedBalance] = useState(12500); // Staked kJ
+  const [ownedAgents, setOwnedAgents] = useState(['A-000']);
+  const [showPurse, setShowPurse] = useState(false);
+  const [totalNetworkYield, setTotalNetworkYield] = useState(0); // kJ per minute
+
+  // --- LIVE CHART STATE ---
+  const [harvestData, setHarvestData] = useState(harvestYieldData); // Fixed: Changed initialHarvestData to harvestYieldData
+
+  // --- LIST STATES ---
+  const [harvestApps, setHarvestApps] = useState([
+    { id: 'H-01', name: 'Bio-Metric Stream', type: 'Biological', status: 'Running', efficiency: 98, yield: 120 },
+    { id: 'H-02', name: 'IoT Sensor Net', type: 'Environmental', status: 'Running', efficiency: 94, yield: 85 },
+    { id: 'H-03', name: 'Fin-Algo Scraper', type: 'Financial', status: 'Idle', efficiency: 0, yield: 300 },
+    { id: 'H-04', name: 'Neural Link V2', type: 'Cognitive', status: 'Calibrating', efficiency: 45, yield: 50 },
+  ]);
+
+  const [mintedAssets, setMintedAssets] = useState([
+    { id: 'M-77', name: 'Therapeutic Script #402', type: 'Script', date: '2024-10-24', value: 4500, status: 'Minted' },
+    { id: 'M-78', name: 'Bio-Yield Algo v1', type: 'Algorithm', date: '2024-10-25', value: 8200, status: 'Staked' },
+    { id: 'M-79', name: 'Trauma Data Set A', type: 'Data', date: '2024-10-26', value: 3100, status: 'Pending' },
+  ]);
+
+  const [forgedModules, setForgedModules] = useState([
+    { id: 'F-01', name: 'Yield Maximizer', type: 'DeFi', version: '1.2.0', score: 92, status: 'Active' },
+    { id: 'F-02', name: 'Empathy Engine', type: 'Core', version: '0.9.5', score: 88, status: 'Compiling' },
+  ]);
+
+  const [activeSessions, setActiveSessions] = useState([
+    { id: 'S-101', patient: 'Anonymous-9', protocol: 'Trauma Release', bioSync: 98, yield: 450 },
+    { id: 'S-102', patient: 'Unit-734', protocol: 'System Calibration', bioSync: 100, yield: 120 },
+  ]);
+
+  const [healthRingRegistry, setHealthRingRegistry] = useState([
+    { id: 'HR-8821', name: 'Dr. Alara Vane', specialization: 'Bio-Metric Harvesting', status: 'Active', yieldEfficiency: '98.5%' },
+    { id: 'HR-3321', name: 'Node-7 Alpha', specialization: 'Data Securitization', status: 'Syncing', yieldEfficiency: '84.2%' },
+    { id: 'HR-9910', name: 'Marcus Chen', specialization: 'Asset Minting', status: 'Active', yieldEfficiency: '97.5%' },
+    { id: 'HR-1102', name: 'Unit 734', specialization: 'BETS Calibration', status: 'Certified', yieldEfficiency: '99.9%' },
+  ]);
+
+  const [complianceLogs, setComplianceLogs] = useState([
+    { id: 'L-55', node: 'Node-Alpha', event: 'Liquidity Spike', status: 'Resolved', impact: 'Low' },
+    { id: 'L-56', node: 'Node-Gamma', event: 'IoT Desync', status: 'Active', impact: 'High' },
+  ]);
+
+  // --- FILTER STATES ---
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedForgeCategory, setSelectedForgeCategory] = useState('All');
+
+  // --- AI INSIGHT STATES ---
+  const [optimizationInsight, setOptimizationInsight] = useState('');
+  const [isOptimizingNodes, setIsOptimizingNodes] = useState(false);
+  const [valuationInsight, setValuationInsight] = useState('');
+  const [isValuatingAssets, setIsValuatingAssets] = useState(false);
+  const [generatedAppIdea, setGeneratedAppIdea] = useState(null);
+  const [isForgingIdea, setIsForgingIdea] = useState(false);
+  const [betsRecommendation, setBetsRecommendation] = useState('');
+  const [isBetsAnalyzing, setIsBetsAnalyzing] = useState(false);
+  const [auditReport, setAuditReport] = useState('');
+  const [isAuditing, setIsAuditing] = useState(false);
+  const [harvestInsight, setHarvestInsight] = useState('');
+  const [isAnalyzingHarvest, setIsAnalyzingHarvest] = useState(false);
+  const [contractLogic, setContractLogic] = useState('');
+  const [isGeneratingContract, setIsGeneratingContract] = useState(false);
+  const [streamSimulation, setStreamSimulation] = useState('');
+  const [isSimulatingStream, setIsSimulatingStream] = useState(false);
+  const [portfolioAnalysis, setPortfolioAnalysis] = useState('');
+  const [isAnalyzingPortfolio, setIsAnalyzingPortfolio] = useState(false);
+  const [scenarioSimulation, setScenarioSimulation] = useState('');
+  const [isSimulatingScenario, setIsSimulatingScenario] = useState(false);
+  const [sessionLog, setSessionLog] = useState('');
+  const [isGeneratingLog, setIsGeneratingLog] = useState(false);
+  const [remediationPlan, setRemediationPlan] = useState('');
+  const [isGeneratingRemediation, setIsGeneratingRemediation] = useState(false);
+  const [moduleCode, setModuleCode] = useState('');
+  const [isGeneratingCode, setIsGeneratingCode] = useState(false);
+  const [walletInsight, setWalletInsight] = useState('');
+  const [isAnalyzingWallet, setIsAnalyzingWallet] = useState(false);
+  const [registryInsight, setRegistryInsight] = useState('');
+  const [isAuditingRegistry, setIsAuditingRegistry] = useState(false);
+
+  // --- UI STATES ---
+  const [assetName, setAssetName] = useState('');
+  const [assetDesc, setAssetDesc] = useState('');
+  const [selectedAssetType, setSelectedAssetType] = useState('IoT Data Stream');
+  const [isMintingAI, setIsMintingAI] = useState(false);
+  const [clinicalMode, setClinicalMode] = useState(false);
+  
+  // --- CHAT STATE ---
+  const [chatInput, setChatInput] = useState('');
+  const [chatHistory, setChatHistory] = useState([
+    { role: 'agent', text: 'Secure Connection Established. I am your IoT Financial Liaison. Ready to optimize data yields and asset allocation.' }
+  ]);
+  const [isAgentTyping, setIsAgentTyping] = useState(false);
+
+  // --- GEMINI API ---
+  const apiKey = ""; 
+  
+  const callGemini = async (prompt, setStateFunction, loadingStateFunction, callback = null) => {
+    loadingStateFunction(true);
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        }
+      );
+      const data = await response.json();
+      if (data.candidates && data.candidates[0].content) {
+        const text = data.candidates[0].content.parts[0].text;
+        setStateFunction ? setStateFunction(text) : callback && callback(text);
+      } else {
+        const errorMsg = "Error: Could not retrieve financial insight.";
+        setStateFunction ? setStateFunction(errorMsg) : callback && callback(errorMsg);
+      }
+    } catch (error) {
+      console.error("Gemini API Error:", error);
+      const errorMsg = "Connection Error: Grid Offline.";
+      setStateFunction ? setStateFunction(errorMsg) : callback && callback(errorMsg);
+    } finally {
+      loadingStateFunction(false);
+    }
+  };
+
+  // --- EFFECT: CALCULATE ACTIVE YIELD & UPDATE BALANCE ---
+  useEffect(() => {
+    // 1. Calculate Total Yield from Running Apps
+    const currentYield = harvestApps
+      .filter(app => app.status === 'Running')
+      .reduce((acc, app) => acc + (app.yield * (app.efficiency / 100)), 0);
+    
+    setTotalNetworkYield(Math.floor(currentYield));
+
+    // 2. Loop to update Balance and Chart based on Yield
+    const interval = setInterval(() => {
+      // Add a fraction of per-minute yield every tick (approx every 2 sec for chart, here every 1 sec for balance)
+      setUserBalance(prev => prev + (currentYield / 60)); // Add per-second yield
+
+      // Update Chart with simulated fluctuation
+      setHarvestData(prevData => {
+        const lastTime = parseInt(prevData[prevData.length - 1].time.split(':')[0]);
+        const newTime = `${(lastTime + 1) % 24}:00`; // Simple increment
+        
+        // Remove first, add new
+        const newData = [...prevData.slice(1)];
+        newData.push({
+          time: newTime,
+          dataInflow: 800 + Math.random() * 400 + (currentYield * 2), // Correlate inflow with active yield
+          tokenGen: 80 + Math.random() * 40 + (currentYield / 5),
+          iotSync: 90 + Math.random() * 9
+        });
+        return newData;
+      });
+
+    }, 2000); // 2 Second Tick
+
+    return () => clearInterval(interval);
+  }, [harvestApps]);
+
+
+  // --- HANDLERS ---
+
+  const handleGenerateAsset = () => {
+    const prompt = `Generate a valuable name and description for a new digital asset in a Financialized IoT Economy.
+    The asset category is: "${selectedAssetType}".
+    Focus on: Market Value, Data Yield, and Connectivity.
+    Tone: Professional, High-Tech, Economic.
+    Format response as: "NAME: [Name] | DESC: [Description]"`;
+    
+    setIsMintingAI(true);
+    const parseResponse = (text) => {
+       const parts = text.split('| DESC:');
+       if (parts.length > 0) {
+         setAssetName(parts[0].replace('NAME:', '').trim());
+         if (parts[1]) setAssetDesc(parts[1].trim());
+       } else {
+         setAssetDesc(text);
+       }
+    };
+    callGemini(prompt, (text) => parseResponse(text), setIsMintingAI);
+  };
+
+  // NEW: Functional Minting Handler
+  const handleMintToBlockchain = () => {
+    const mintCost = 500;
+    if (userBalance < mintCost) {
+      alert("Insufficient Funds: Need 500 kJ Gas Fee");
+      return;
+    }
+    if (!assetName) {
+      alert("Asset Name Required");
+      return;
+    }
+
+    setUserBalance(prev => prev - mintCost);
+    
+    const newAsset = {
+      id: `M-${Math.floor(Math.random() * 1000)}`,
+      name: assetName,
+      type: selectedAssetType.split(' ')[0], // Simple type extraction
+      date: new Date().toISOString().split('T')[0],
+      value: Math.floor(Math.random() * 5000) + 1000, // Random initial value
+      status: 'Minted'
+    };
+
+    setMintedAssets(prev => [newAsset, ...prev]);
+    setAssetName('');
+    setAssetDesc('');
+    alert(`Asset "${assetName}" Minted Successfully! Gas Fee: -500 kJ`);
+  };
+
+  const handleNodeOptimization = () => {
+    const appStr = JSON.stringify(harvestApps);
+    const prompt = `You are a Node Optimization AI. Analyze these Harvester Apps: ${appStr}.
+    Current Grid Load is 85%.
+    Recommend specific tuning actions to maximize kJ yield without crashing the node.
+    Keep it brief, technical and actionable.`;
+
+    callGemini(prompt, setOptimizationInsight, setIsOptimizingNodes);
+  };
+
+  const handleAssetValuation = () => {
+    const assetStr = JSON.stringify(mintedAssets);
+    const prompt = `You are a Digital Asset Appraiser. Analyze these Assets: ${assetStr}.
+    Market Liquidity is High.
+    Estimate appreciation and suggest staking strategies.
+    Keep it financial and concise.`;
+
+    callGemini(prompt, setValuationInsight, setIsValuatingAssets);
+  };
+
+  const handleGenerateContract = () => {
+    const prompt = `Generate a conceptual Smart Contract logic for a Financialized IoT Asset named "${assetName || 'Unknown Asset'}".
+    Type: ${selectedAssetType}.
+    Include functions for: Yield Distribution, Data Verification, and Liquid Staking.
+    Format as pseudo-code or distinct logic steps.`;
+    
+    callGemini(prompt, setContractLogic, setIsGeneratingContract);
+  };
+
+  const handleForgeIdea = () => {
+    const prompt = `Generate a concept for a decentralized application focused on IoT Data Harvesting.
+    Provide: Title, Description, and a "Monetization Score" (0-100).
+    Format as JSON: { "title": "...", "description": "...", "monetizationScore": "..." }`;
+
+    setIsForgingIdea(true);
+    callGemini(prompt, null, setIsForgingIdea, (text) => {
+        try {
+            const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            const json = JSON.parse(cleanText);
+            setGeneratedAppIdea(json);
+            setForgedModules(prev => [...prev, {
+                id: `F-0${prev.length + 1}`,
+                name: json.title,
+                type: 'Prototype',
+                version: '0.1.0',
+                score: json.monetizationScore,
+                status: 'Drafting'
+            }]);
+        } catch (e) {
+            setGeneratedAppIdea({ title: "Data Corruption", description: text, monetizationScore: "N/A" });
+        }
+    });
+  };
+
+  const handleGenerateModuleCode = (module) => {
+    const prompt = `Generate the core React/TypeScript code structure for a decentralized application module named "${module.name}".
+    Type: ${module.type}.
+    Context: Financialized IoT Data Harvesting Platform.
+    Include standard imports, a main component interface, and a placeholder for the "Harvest Logic".
+    Keep it concise.`;
+    
+    callGemini(prompt, setModuleCode, setIsGeneratingCode);
+  };
+
+  const handleInitializeTemplate = (template) => {
+    setForgedModules(prev => [...prev, {
+      id: `F-0${prev.length + 1}`,
+      name: template.title,
+      type: 'Template',
+      version: '1.0.0',
+      score: '85',
+      status: 'Initializing'
+    }]);
+  };
+
+  const handleCreateCustomModule = () => {
+    setForgedModules(prev => [...prev, {
+      id: `F-0${prev.length + 1}`,
+      name: 'Untitled Prototype',
+      type: 'Custom',
+      version: '0.0.1',
+      score: '?',
+      status: 'Drafting'
+    }]);
+  };
+
+  const handleBetsAnalysis = () => {
+    const prompt = `You are a BETS Health Optimizer.
+    Analyze: Patient Data Output 92%, Bio-Metric Stability Stable.
+    Suggest 2 protocols to maximize therapeutic efficacy.
+    Keep it concise.`;
+    
+    callGemini(prompt, setBetsRecommendation, setIsBetsAnalyzing);
+  };
+
+  const handleAuditReport = () => {
+    const prompt = `You are a Grid Financial Auditor.
+    Analyze: Asset Liquidity High, Data Quality Medium, Grid Stability High.
+    Write a short report on optimization.
+    Max 3 bullet points.`;
+
+    callGemini(prompt, (text) => {
+        setAuditReport(text);
+        setComplianceLogs(prev => [{
+            id: `L-${Math.floor(Math.random() * 100)}`,
+            node: 'System-Auditor',
+            event: 'Manual Audit Triggered',
+            status: 'Completed',
+            impact: 'Info'
+        }, ...prev]);
+    }, setIsAuditing);
+  };
+
+  const handleHarvestAnalysis = () => {
+    const dataStr = JSON.stringify(harvestYieldData);
+    const prompt = `Analyze this IoT Harvesting Data: ${dataStr}.
+    Focus on Data Inflow vs Token Gen. Predict 'Yield' trend.
+    Keep it technical.`;
+    callGemini(prompt, setHarvestInsight, setIsAnalyzingHarvest);
+  };
+
+  const handleSimulateStream = () => {
+    const prompt = `Generate a raw JSON sample of a live data stream for 'Bio-Metric Harvesting'.
+    Include: timestamp, device_id, heart_rate, skin_conductance, current_yield_kj.`;
+    callGemini(prompt, setStreamSimulation, setIsSimulatingStream);
+  };
+
+  const handlePortfolioAnalysis = () => {
+    const ownedStr = JSON.stringify(ownedAgents);
+    const marketStr = JSON.stringify(marketAgents.map(a => ({ name: a.name, yield: a.yield, price: a.price })));
+    const prompt = `You are an AI Portfolio Manager.
+    User Owned Agents: ${ownedStr}.
+    Market Opportunities: ${marketStr}.
+    Current Balance: ${userBalance} kJ.
+    Recommend the BEST next agent to harvest (Buy).`;
+    callGemini(prompt, setPortfolioAnalysis, setIsAnalyzingPortfolio);
+  };
+
+  const handleScenarioSimulation = () => {
+    const metricsStr = JSON.stringify(marketMetrics);
+    const prompt = `Simulate "Level 5 Solar Flare".
+    Current Metrics: ${metricsStr}.
+    Output degradation of 'Grid Stability' and 'Liquidity'.`;
+    callGemini(prompt, setScenarioSimulation, setIsSimulatingScenario);
+  };
+
+  const handleGenerateSessionLog = (session) => {
+    const prompt = `Generate a clinical and technical session log for a BETS (Bio-Energetic Therapeutic System) session.
+    Patient Node: ${session.patient}
+    Protocol: ${session.protocol}
+    Bio-Sync Rate: ${session.bioSync}%
+    Energy Yield: ${session.yield} kJ
+    
+    Describe the patient's physiological response, specific frequency adjustments made by the AI, and the quality of the harvested data. Keep it professional and futuristic.`;
+    
+    callGemini(prompt, setSessionLog, setIsGeneratingLog);
+  };
+
+  const handleGenerateRemediation = (log) => {
+    const prompt = `Analyze this Grid Compliance Event: "${log.event}" on Node "${log.node}". Status: ${log.status}. Impact: ${log.impact}.
+    
+    Provide a technical remediation plan. 
+    1. Immediate Action (e.g., isolate node, inject liquidity).
+    2. Long-term Patch (e.g., update smart contract, recalibrate sensors).
+    Keep it actionable and brief.`;
+
+    callGemini(prompt, setRemediationPlan, setIsGeneratingRemediation);
+  };
+
+  const handleWalletAnalysis = () => {
+    const transactions = [
+      { desc: 'Harvest Yield', val: '+450 kJ', time: '10m ago', type: 'in' },
+      { desc: 'Minting Fee', val: '-200 kJ', time: '1h ago', type: 'out' },
+      { desc: 'Staking Reward', val: '+125 kJ', time: '4h ago', type: 'in' },
+    ];
+    const txHistory = JSON.stringify(transactions);
+    const prompt = `Analyze this wallet ledger: ${txHistory}. Current Balance: ${userBalance} kJ.
+    Predict the next 24h yield curve and suggest a "Staking" vs "Liquid" ratio for maximum ROI.
+    Keep it strictly financial and mathematical.`;
+    
+    callGemini(prompt, setWalletInsight, setIsAnalyzingWallet);
+  };
+
+  const handleRegistryAudit = (entity) => {
+    const prompt = `Perform a deep compliance audit on Health Ring Entity: "${entity.name}".
+    Specialization: ${entity.specialization}.
+    Efficiency: ${entity.yieldEfficiency}.
+    
+    Verify their "Bio-Metric Purity" and "Data Ethic" alignment. 
+    Generate a "Trust Score" (0-100) and a brief risk assessment.`;
+    
+    callGemini(prompt, setRegistryInsight, setIsAuditingRegistry);
+  };
+
+  const handleAgentChat = () => {
+    if (!chatInput.trim()) return;
+    const newHistory = [...chatHistory, { role: 'user', text: chatInput }];
+    setChatHistory(newHistory);
+    setChatInput('');
+    setIsAgentTyping(true);
+    const prompt = `Roleplay as a High-Value IoT Financial Asset.
+    User's last message: "${chatInput}"
+    Reply guidelines: Be precise, analytical, profit-oriented. Under 40 words.`;
+    callGemini(prompt, null, setIsAgentTyping, (text) => {
+        setChatHistory(prev => [...prev, { role: 'agent', text }]);
+    });
+  };
+
+  const toggleAppStatus = (id) => {
+    setHarvestApps(apps => apps.map(app => 
+      app.id === id ? { ...app, status: app.status === 'Running' ? 'Idle' : 'Running' } : app
+    ));
+  };
+
+  const handleHarvest = (agent) => {
+    if (ownedAgents.includes(agent.id)) return;
+    const cost = parseInt(agent.price.split(' ')[0]);
+    if (userBalance >= cost) {
+      setUserBalance(prev => prev - cost);
+      setOwnedAgents(prev => [...prev, agent.id]);
+    } else {
+      alert("Insufficient Energy Credits (kJ)");
+    }
+  };
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [chatHistory]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setEnergyStandard(prev => +(prev + (Math.random() * 0.004 - 0.002)).toFixed(4));
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const NavItem = ({ id, icon: Icon, label }: { id: string, icon: any, label: string }) => (
+    <button
+      onClick={() => setActiveTab(id)}
+      className={`w-full flex items-center space-x-3 px-4 py-3 transition-colors duration-200 
+        ${activeTab === id 
+          ? 'bg-emerald-500/10 text-emerald-400 border-r-2 border-emerald-400' 
+          : 'text-slate-400 hover:bg-slate-800/50 hover:text-slate-200'}`}
+    >
+      <Icon size={20} />
+      <span className="font-medium tracking-wide">{label}</span>
+    </button>
+  );
+
+  return (
+    <div className="min-h-screen bg-[#05060a] text-slate-200 font-sans selection:bg-emerald-500/30 relative">
+      
+      {/* HEADER */}
+      <header className="fixed top-0 w-full bg-[#05060a]/90 backdrop-blur-md border-b border-slate-800 z-50 h-16 flex items-center justify-between px-6">
+        <div className="flex items-center space-x-4">
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 hover:bg-slate-800 rounded-lg text-slate-400">
+            {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+          <div className="flex items-center space-x-2">
+            <Globe className="text-emerald-500" />
+            <span className="text-xl font-bold tracking-wider text-white">
+              AETHERIOS <span className="text-emerald-500 font-light">PRIME</span>
+            </span>
+          </div>
+        </div>
+        
+        <div className="flex items-center space-x-6">
+          <div className="hidden md:flex flex-col items-end">
+            <span className="text-xs text-slate-500 uppercase tracking-widest">System Mode</span>
+            <div className="flex items-center space-x-2">
+              <span className={`w-2 h-2 rounded-full bg-emerald-500 animate-pulse`} />
+              <span className="text-sm font-mono text-emerald-400">FINANCIALIZED IoT</span>
+            </div>
+          </div>
+          <div className="h-8 w-[1px] bg-slate-800 hidden md:block" />
+          <div className="flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
+            <Zap size={14} className="text-yellow-500" />
+            <span className="text-xs font-mono text-slate-300">
+              {energyStandard.toFixed(4)} kJ/UNIT
+            </span>
+          </div>
+          <button 
+            onClick={() => setShowPurse(!showPurse)}
+            className={`p-2 rounded-lg transition-colors ${showPurse ? 'bg-emerald-600 text-white' : 'bg-slate-900 text-emerald-400 hover:bg-slate-800'}`}
+          >
+            <Wallet size={20} />
+          </button>
+        </div>
+      </header>
+
+      {/* EPURSE OVERLAY */}
+      {showPurse && (
+        <div className="fixed top-16 right-6 w-96 bg-[#0c0e18] border border-slate-800 rounded-2xl shadow-2xl z-50 animate-in slide-in-from-top-4 fade-in">
+          <div className="p-6 border-b border-slate-800">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+                <Wallet size={18} className="text-emerald-400"/>
+                <span>ePurse Connect</span>
+              </h3>
+              <button onClick={() => setShowPurse(false)} className="text-slate-500 hover:text-white"><X size={18}/></button>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div className="bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
+                <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Liquid Balance</p>
+                <p className="text-xl font-mono font-bold text-white">{Math.floor(userBalance).toLocaleString()} kJ</p>
+              </div>
+              <div className="bg-slate-900/50 p-3 rounded-xl border border-slate-700/50">
+                <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Staked Value</p>
+                <p className="text-xl font-mono font-bold text-indigo-400">{stakedBalance.toLocaleString()} kJ</p>
+              </div>
+            </div>
+            <div className="flex items-center justify-between text-xs text-slate-400 mb-6">
+               <span>Yield Velocity</span>
+               <span className="text-emerald-400 font-bold flex items-center"><TrendingUp size={12} className="mr-1"/> +{totalNetworkYield} kJ/min</span>
+            </div>
+
+            {/* AI Wallet Analyst */}
+            <div className="mb-4">
+               <button 
+                  onClick={handleWalletAnalysis}
+                  disabled={isAnalyzingWallet}
+                  className="w-full bg-indigo-600/20 text-indigo-400 border border-indigo-500/50 hover:bg-indigo-600/30 text-xs font-bold px-4 py-2 rounded-xl flex items-center justify-center space-x-2 transition-colors disabled:opacity-50"
+               >
+                  {isAnalyzingWallet ? <Loader className="animate-spin" size={14} /> : <BrainCircuit size={14} />}
+                  <span>AI LEDGER ANALYST</span>
+               </button>
+               {walletInsight && (
+                  <div className="mt-3 bg-indigo-900/10 border border-indigo-500/20 p-3 rounded-xl animate-in fade-in">
+                     <p className="text-xs text-indigo-200 leading-relaxed font-mono whitespace-pre-line">{walletInsight}</p>
+                  </div>
+               )}
+            </div>
+          </div>
+          <div className="p-6 bg-slate-900/30">
+            <h4 className="text-xs font-bold text-slate-500 uppercase mb-4 flex items-center">
+              <History size={14} className="mr-2"/> Recent Transactions
+            </h4>
+            <div className="space-y-3">
+              {[
+                { desc: 'Harvest Yield', val: '+450 kJ', time: '10m ago', type: 'in' },
+                { desc: 'Minting Fee', val: '-200 kJ', time: '1h ago', type: 'out' },
+                { desc: 'Staking Reward', val: '+125 kJ', time: '4h ago', type: 'in' },
+              ].map((tx, i) => (
+                <div key={i} className="flex justify-between items-center text-sm">
+                  <div>
+                    <p className="text-slate-300">{tx.desc}</p>
+                    <p className="text-xs text-slate-600">{tx.time}</p>
+                  </div>
+                  <span className={`font-mono font-bold ${tx.type === 'in' ? 'text-emerald-400' : 'text-rose-400'}`}>
+                    {tx.val}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <button className="w-full mt-6 bg-slate-800 hover:bg-slate-700 text-slate-300 py-2 rounded-lg text-sm font-medium transition-colors">
+              View Full Ledger
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* SIDEBAR */}
+      <aside className={`fixed top-16 left-0 h-[calc(100vh-64px)] bg-[#0c0e18] border-r border-slate-800 transition-all duration-300 z-40 
+        ${sidebarOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0 lg:w-20'}`}>
+        <div className="flex flex-col h-full py-6">
+          <div className="space-y-1">
+            <NavItem id="nexus" icon={ShoppingBag} label={sidebarOpen ? "Agent Nexus" : ""} />
+            <NavItem id="harvest" icon={Database} label={sidebarOpen ? "Data Harvesting" : ""} />
+            <NavItem id="forge" icon={Hammer} label={sidebarOpen ? "App Forge" : ""} />
+            <NavItem id="minting" icon={Gem} label={sidebarOpen ? "Asset Minting" : ""} />
+            <NavItem id="bets" icon={Stethoscope} label={sidebarOpen ? "BETS Health" : ""} />
+            <NavItem id="regulatory" icon={Scale} label={sidebarOpen ? "Grid Regulation" : ""} />
+            <NavItem id="registry" icon={FileBadge} label={sidebarOpen ? "Health Ring" : ""} />
+          </div>
+          
+          <div className="mt-auto px-4">
+            {sidebarOpen && (
+              <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800/50">
+                <h4 className="text-xs font-semibold text-slate-500 uppercase mb-2">Grid Status</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-slate-400">IoT Sync</span>
+                    <span className="text-emerald-400">98.4%</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-slate-400">Data Yield</span>
+                    <span className="text-emerald-400">Optimal</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </aside>
+
+      {/* MAIN CONTENT */}
+      <main className={`pt-24 pb-12 px-6 transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-0 lg:ml-20'}`}>
+
+        {/* AGENT NEXUS */}
+        {activeTab === 'nexus' && (
+          <div className="space-y-6">
+             <div className="flex flex-col md:flex-row justify-between items-end mb-4">
+                <div>
+                   <h1 className="text-3xl font-bold text-white mb-2">Agent Nexus</h1>
+                   <p className="text-slate-400">Harvest Financialized IoT Agents. Optimize your Asset Portfolio.</p>
+                </div>
+                {/* Portfolio Strategist UI */}
+                <div className="flex space-x-3">
+                   <button 
+                      onClick={handlePortfolioAnalysis}
+                      disabled={isAnalyzingPortfolio}
+                      className="bg-indigo-600/20 text-indigo-400 border border-indigo-500/50 hover:bg-indigo-600/30 text-sm font-bold px-4 py-2 rounded-xl flex items-center space-x-2 transition-colors disabled:opacity-50"
+                   >
+                      {isAnalyzingPortfolio ? <Loader className="animate-spin" size={16} /> : <Briefcase size={16} />}
+                      <span>STRATEGY AI</span>
+                   </button>
+                </div>
+             </div>
+
+             {portfolioAnalysis && (
+                <div className="bg-indigo-900/10 border border-indigo-500/20 p-6 rounded-2xl animate-in fade-in mb-6">
+                   <div className="flex items-center space-x-2 text-indigo-400 mb-2">
+                      <Sparkles size={18} />
+                      <span className="text-sm font-bold uppercase">Strategic Insight</span>
+                   </div>
+                   <p className="text-sm text-indigo-200 leading-relaxed font-mono whitespace-pre-line">{portfolioAnalysis}</p>
+                </div>
+             )}
+
+             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {marketAgents.map((agent) => (
+                  <div key={agent.id} className="bg-[#0c0e18] p-5 rounded-2xl border border-slate-800 hover:border-emerald-500/50 transition-all group">
+                      <div className="flex justify-between items-start mb-4">
+                        <div className="p-3 bg-slate-900 rounded-xl text-slate-400 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                            <agent.icon size={24} />
+                        </div>
+                        <span className={`text-xs px-2 py-1 rounded border ${ownedAgents.includes(agent.id) ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10' : 'border-slate-700 text-slate-500'}`}>
+                            {ownedAgents.includes(agent.id) ? 'PORTFOLIO' : 'MARKET'}
+                        </span>
+                      </div>
+                      
+                      <h3 className="text-lg font-bold text-white">{agent.name}</h3>
+                      <p className="text-sm text-slate-500 mb-4">{agent.type} Unit • Tier {agent.level}</p>
+                      
+                      <div className="space-y-2 mb-6">
+                        <div className="flex justify-between text-xs text-slate-400">
+                            <span>IoT Sync Rate</span>
+                            <span className="text-emerald-400">{agent.iotSync}%</span>
+                        </div>
+                        <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                            <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${agent.iotSync}%` }} />
+                        </div>
+                        <div className="flex justify-between text-xs text-slate-400 mt-2">
+                            <span>Daily Yield</span>
+                            <span className="text-amber-400 font-mono">{agent.yield}</span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-4 border-t border-slate-800">
+                        <span className="text-lg font-bold font-mono text-white">{agent.price}</span>
+                        <button 
+                          onClick={() => handleHarvest(agent)}
+                          disabled={ownedAgents.includes(agent.id)}
+                          className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors 
+                            ${ownedAgents.includes(agent.id) 
+                              ? 'bg-emerald-500/20 text-emerald-400 cursor-default' 
+                              : 'bg-emerald-600 hover:bg-emerald-500 text-white'}`}
+                        >
+                            {ownedAgents.includes(agent.id) ? 'SYNCED' : 'HARVEST'}
+                        </button>
+                      </div>
+                  </div>
+                ))}
+             </div>
+          </div>
+        )}
+
+        {/* DATA HARVESTING */}
+        {activeTab === 'harvest' && (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-white mb-6">Data Harvesting Analytics</h2>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              
+              {/* Analytics Chart */}
+              <div className="lg:col-span-2 bg-[#0c0e18] p-6 rounded-2xl border border-slate-800">
+                <div className="flex justify-between items-center mb-4">
+                   <h3 className="text-lg font-bold text-white">Yield Efficiency</h3>
+                   <div className="flex space-x-2">
+                     <button 
+                        onClick={handleSimulateStream}
+                        disabled={isSimulatingStream}
+                        className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors disabled:opacity-50 border border-slate-700"
+                      >
+                        {isSimulatingStream ? <Loader className="animate-spin" size={14} /> : <Terminal size={14} />}
+                        <span>SIMULATE STREAM</span>
+                      </button>
+                     <button 
+                        onClick={handleHarvestAnalysis}
+                        disabled={isAnalyzingHarvest}
+                        className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors disabled:opacity-50 border border-slate-700"
+                      >
+                        {isAnalyzingHarvest ? <Loader className="animate-spin" size={14} /> : <BarChart4 size={14} />}
+                        <span>PREDICT YIELD</span>
+                      </button>
+                   </div>
+                </div>
+                
+                {streamSimulation && (
+                  <div className="mb-4 bg-slate-950 border border-slate-800 p-4 rounded-lg animate-in fade-in slide-in-from-top-2 font-mono text-xs text-emerald-500 overflow-x-auto">
+                    <pre>{streamSimulation}</pre>
+                  </div>
+                )}
+
+                {harvestInsight && (
+                  <div className="mb-4 bg-emerald-900/20 border border-emerald-500/30 p-4 rounded-lg animate-in fade-in slide-in-from-top-2">
+                    <div className="flex items-center space-x-2 text-emerald-400 mb-2">
+                      <Sparkles size={14} />
+                      <span className="text-xs font-bold uppercase">MARKET INSIGHT</span>
+                    </div>
+                    <div className="prose prose-invert prose-sm max-w-none text-emerald-100/90 whitespace-pre-line leading-relaxed">
+                      {harvestInsight}
+                    </div>
+                  </div>
+                )}
+
+                <div className="h-64">
+                   <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={harvestData}>
+                      <defs>
+                        <linearGradient id="colorInflow" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
+                      <XAxis dataKey="time" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b' }} />
+                      <Legend />
+                      <Area type="monotone" dataKey="dataInflow" stroke="#10b981" fillOpacity={1} fill="url(#colorInflow)" name="Data Inflow (MB)" />
+                      <Line type="monotone" dataKey="tokenGen" stroke="#f59e0b" strokeWidth={2} name="Token Gen (Units)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              
+              {/* Harvester Application List */}
+              <div className="bg-[#0c0e18] p-6 rounded-2xl border border-slate-800">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+                    <List size={20} className="text-emerald-400"/>
+                    <span>Harvester List</span>
+                  </h3>
+                  <button 
+                    onClick={handleNodeOptimization}
+                    disabled={isOptimizingNodes}
+                    className="flex items-center space-x-1 p-2 bg-emerald-600/20 text-emerald-400 rounded-lg hover:bg-emerald-600/30 transition-colors disabled:opacity-50 text-xs font-bold border border-emerald-500/30"
+                  >
+                    {isOptimizingNodes ? <Loader size={12} className="animate-spin" /> : <Gauge size={12} />}
+                    <span>AI TUNE</span>
+                  </button>
+                </div>
+
+                {optimizationInsight && (
+                   <div className="mb-4 bg-emerald-900/10 border border-emerald-500/20 p-3 rounded-xl animate-in fade-in">
+                      <div className="flex items-center space-x-2 text-emerald-400 mb-1">
+                         <Sparkles size={12} />
+                         <span className="text-xs font-bold uppercase">Tuning Report</span>
+                      </div>
+                      <p className="text-xs text-emerald-200/80 leading-relaxed">{optimizationInsight}</p>
+                   </div>
+                )}
+
+                <div className="space-y-3">
+                   {harvestApps.map((app, i) => (
+                      <div key={i} className="p-4 bg-slate-900 rounded-xl border border-slate-800 hover:border-slate-700 transition-all">
+                        <div className="flex justify-between items-start mb-2">
+                          <div>
+                            <div className="text-sm font-bold text-white">{app.name}</div>
+                            <div className="text-xs text-slate-500">{app.type}</div>
+                          </div>
+                          <button 
+                            onClick={() => toggleAppStatus(app.id)}
+                            className={`p-1.5 rounded-full ${app.status === 'Running' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-slate-700 text-slate-400'}`}
+                          >
+                            {app.status === 'Running' ? <Pause size={14}/> : <Play size={14}/>}
+                          </button>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center space-x-2">
+                            <span className={`w-2 h-2 rounded-full ${app.status === 'Running' ? 'bg-emerald-500 animate-pulse' : 'bg-slate-600'}`} />
+                            <span className="text-slate-400 uppercase">{app.status}</span>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-slate-500">Efficiency</div>
+                            <div className="font-mono text-emerald-400">{app.efficiency}%</div>
+                          </div>
+                        </div>
+                      </div>
+                   ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* APP FORGE */}
+        {activeTab === 'forge' && (
+          <div className="space-y-6">
+             <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                
+                {/* Category Sidebar */}
+                <div className="lg:col-span-1 bg-[#0c0e18] p-6 rounded-2xl border border-slate-800 h-fit">
+                   <div className="flex items-center space-x-2 mb-6">
+                      <Box size={18} className="text-emerald-400" />
+                      <h3 className="font-bold text-white">Categories</h3>
+                   </div>
+                   <div className="space-y-2">
+                      {['All', 'DeFi', 'Core', 'Prototype', 'Template'].map((cat) => (
+                        <button 
+                          key={cat}
+                          onClick={() => setSelectedForgeCategory(cat)}
+                          className={`w-full text-left px-4 py-3 rounded-xl transition-colors text-sm font-medium flex justify-between items-center
+                            ${selectedForgeCategory === cat ? 'bg-emerald-600/20 text-emerald-400 border border-emerald-500/50' : 'hover:bg-slate-800 text-slate-400 border border-transparent'}`}
+                        >
+                           <span>{cat} Modules</span>
+                           {selectedForgeCategory === cat && <span className="bg-emerald-400/20 px-2 py-0.5 rounded text-xs text-emerald-300">View</span>}
+                        </button>
+                      ))}
+                   </div>
+                </div>
+
+                <div className="lg:col-span-3 space-y-8">
+                    <div className="flex justify-between items-end">
+                      <div>
+                        <h1 className="text-3xl font-bold text-white mb-2">Application Forge</h1>
+                        <p className="text-slate-400">Deploy decentralized modules for Data Harvesting and Asset Creation.</p>
+                      </div>
+                      <div className="flex space-x-3">
+                        <button 
+                          onClick={handleForgeIdea}
+                          disabled={isForgingIdea}
+                          className="bg-emerald-600/20 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-600/30 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors disabled:opacity-50"
+                        >
+                           {isForgingIdea ? <Loader className="animate-spin" size={18} /> : <BrainCircuit size={18} />}
+                           <span>Gen. Concept</span>
+                        </button>
+                        <button 
+                          onClick={handleCreateCustomModule}
+                          className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-lg flex items-center space-x-2 transition-colors"
+                        >
+                          <Plus size={18} />
+                          <span>New Module</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* REPAIRED: Forged Modules List */}
+                    <div className="bg-[#0c0e18] p-6 rounded-2xl border border-slate-800 mb-6">
+                        <div className="flex justify-between items-center mb-4">
+                           <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+                              <FileCode size={20} className="text-emerald-400"/>
+                              <span>Deployed Modules Ledger</span>
+                           </h3>
+                        </div>
+
+                        {moduleCode && (
+                           <div className="mb-4 bg-slate-950 border border-slate-800 p-4 rounded-lg animate-in fade-in max-h-64 overflow-y-auto">
+                              <div className="flex items-center space-x-2 text-emerald-400 mb-2 sticky top-0 bg-slate-950 pb-2">
+                                 <Terminal size={14} />
+                                 <span className="text-xs font-bold uppercase">Generated Code</span>
+                              </div>
+                              <pre className="text-xs font-mono text-emerald-500 whitespace-pre-wrap">{moduleCode}</pre>
+                           </div>
+                        )}
+
+                        <div className="overflow-x-auto">
+                           <table className="w-full text-left text-sm">
+                              <thead className="bg-slate-900 text-slate-500 uppercase text-xs">
+                                 <tr>
+                                    <th className="p-3">ID</th>
+                                    <th className="p-3">Module Name</th>
+                                    <th className="p-3">Type</th>
+                                    <th className="p-3">Version</th>
+                                    <th className="p-3">Score</th>
+                                    <th className="p-3">Status</th>
+                                    <th className="p-3 text-right">Action</th>
+                                 </tr>
+                              </thead>
+                              <tbody className="divide-y divide-slate-800">
+                                 {forgedModules
+                                    .filter(mod => selectedForgeCategory === 'All' || mod.type === selectedForgeCategory)
+                                    .map((mod, i) => (
+                                    <tr key={i} className="hover:bg-slate-800/50 transition-colors">
+                                       <td className="p-3 font-mono text-emerald-400">{mod.id}</td>
+                                       <td className="p-3 font-medium text-white">{mod.name}</td>
+                                       <td className="p-3 text-slate-400">{mod.type}</td>
+                                       <td className="p-3 font-mono text-slate-500">{mod.version}</td>
+                                       <td className="p-3 font-mono text-emerald-400">{mod.score}</td>
+                                       <td className="p-3">
+                                          <span className={`px-2 py-1 rounded text-xs border ${
+                                             mod.status === 'Active' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10' :
+                                             'border-slate-600 text-slate-400'
+                                          }`}>
+                                             {mod.status}
+                                          </span>
+                                       </td>
+                                       <td className="p-3 text-right">
+                                          <button 
+                                            onClick={() => handleGenerateModuleCode(mod)}
+                                            disabled={isGeneratingCode}
+                                            className="p-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 rounded-lg transition-colors border border-slate-700"
+                                            title="Generate Code"
+                                          >
+                                            {isGeneratingCode ? <Loader size={14} className="animate-spin" /> : <Terminal size={14} />}
+                                          </button>
+                                       </td>
+                                    </tr>
+                                 ))}
+                              </tbody>
+                           </table>
+                        </div>
+                    </div>
+
+                    {generatedAppIdea && (
+                      <div className="animate-in slide-in-from-top-4 fade-in duration-500 bg-gradient-to-r from-emerald-900/30 to-[#0c0e18] p-6 rounded-2xl border border-emerald-500/40 mb-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <Sparkles className="text-emerald-400" size={20} />
+                            <span className="text-xs font-bold text-emerald-400 uppercase tracking-widest">Market Viable</span>
+                          </div>
+                          <button onClick={() => setGeneratedAppIdea(null)} className="text-slate-500 hover:text-white"><X size={16}/></button>
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">{generatedAppIdea.title || 'Unknown Protocol'}</h3>
+                        <p className="text-slate-300 mb-4">{generatedAppIdea.description}</p>
+                        <div className="inline-block px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono border border-emerald-500/30">
+                          MONETIZATION SCORE: {generatedAppIdea.monetizationScore}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                      {appTemplates.map((app, i) => (
+                        <div key={i} className="bg-[#0c0e18] p-6 rounded-2xl border border-slate-800 hover:border-emerald-500/50 transition-all group cursor-pointer">
+                          <div className="h-12 w-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-500 mb-4 group-hover:scale-110 transition-transform">
+                            <app.icon size={24} />
+                          </div>
+                          <h3 className="text-xl font-bold text-white mb-2">{app.title}</h3>
+                          <p className="text-sm text-slate-500 leading-relaxed mb-4">{app.desc}</p>
+                          <button 
+                            onClick={() => handleInitializeTemplate(app)}
+                            className="w-full mt-2 py-2 text-xs font-mono text-emerald-400 flex items-center justify-center bg-emerald-900/20 rounded hover:bg-emerald-900/40 transition-colors"
+                          >
+                            INITIALIZE <span className="ml-2">→</span>
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                </div>
+             </div>
+
+            {/* ASSET CHAT INTERFACE */}
+            <div className="bg-[#0c0e18] border border-slate-800 rounded-2xl overflow-hidden flex flex-col md:flex-row h-96">
+               <div className="p-6 md:w-1/3 bg-slate-900/30 border-r border-slate-800">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-400"><Wifi size={20} /></div>
+                    <h3 className="font-bold text-white">Live Asset Uplink</h3>
+                  </div>
+                  <p className="text-sm text-slate-400 mb-6">
+                    Direct interface with your highest value IoT Asset. Issue commands for harvesting, minting, or grid synchronization.
+                  </p>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs text-slate-500">
+                      <span>Connection</span>
+                      <span className="text-emerald-400">Stable (5ms)</span>
+                    </div>
+                    <div className="w-full bg-slate-800 h-1 rounded-full">
+                       <div className="w-full bg-emerald-500 h-full rounded-full" />
+                    </div>
+                  </div>
+               </div>
+               
+               <div className="flex-1 flex flex-col bg-[#05060a]">
+                  <div className="flex-1 p-4 overflow-y-auto space-y-4">
+                    {chatHistory.map((msg, i) => (
+                      <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                         <div className={`max-w-[80%] p-3 rounded-xl text-sm ${msg.role === 'user' ? 'bg-emerald-600 text-white rounded-br-none' : 'bg-slate-800 text-slate-200 rounded-bl-none'}`}>
+                           {msg.text}
+                         </div>
+                      </div>
+                    ))}
+                    {isAgentTyping && (
+                      <div className="flex justify-start">
+                        <div className="bg-slate-800 p-3 rounded-xl rounded-bl-none flex space-x-1">
+                          <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" />
+                          <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce delay-75" />
+                          <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce delay-150" />
+                        </div>
+                      </div>
+                    )}
+                    <div ref={chatEndRef} />
+                  </div>
+                  <div className="p-4 bg-slate-900/50 border-t border-slate-800 flex space-x-2">
+                    <input 
+                      type="text" 
+                      value={chatInput}
+                      onChange={(e) => setChatInput(e.target.value)}
+                      onKeyPress={(e) => e.key === 'Enter' && handleAgentChat()}
+                      placeholder="Enter command..."
+                      className="flex-1 bg-slate-800 border-none rounded-lg px-4 py-2 text-sm text-white focus:ring-1 focus:ring-emerald-500 outline-none"
+                    />
+                    <button 
+                      onClick={handleAgentChat}
+                      disabled={isAgentTyping || !chatInput}
+                      className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white p-2 rounded-lg transition-colors"
+                    >
+                      <Send size={18} />
+                    </button>
+                  </div>
+               </div>
+            </div>
+          </div>
+        )}
+
+        {/* BETS HEALING */}
+        {activeTab === 'bets' && (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-white mb-2">BETS Health Tech</h2>
+            <p className="text-slate-400">Bio-Energetic Therapeutic Standards & Healing Systems</p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-[#0c0e18] p-8 rounded-2xl border border-slate-800 relative overflow-hidden">
+                <h3 className="text-xl font-bold text-white mb-4">Frequency Emitter</h3>
+                <div className="flex items-center space-x-4 mb-8">
+                  <div className="text-4xl font-bold text-emerald-400">432 Hz</div>
+                  <div className="text-sm text-slate-500">Standard Resonance / Wellness</div>
+                </div>
+                <button className="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-lg border border-slate-700 transition-colors">
+                  Calibrate Frequency
+                </button>
+              </div>
+
+              <div className="bg-[#0c0e18] p-8 rounded-2xl border border-slate-800">
+                <div className="flex justify-between items-start mb-4">
+                  <h3 className="text-xl font-bold text-white">BETS Advisor AI</h3>
+                  <button 
+                    onClick={handleBetsAnalysis}
+                    disabled={isBetsAnalyzing}
+                    className="flex items-center space-x-2 bg-emerald-600/20 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-emerald-500/30 hover:bg-emerald-600/30 transition-colors disabled:opacity-50"
+                  >
+                    {isBetsAnalyzing ? <Loader className="animate-spin" size={14} /> : <Sparkles size={14} />}
+                    <span>GET PROTOCOL</span>
+                  </button>
+                </div>
+
+                {betsRecommendation && (
+                  <div className="bg-emerald-500/10 border border-emerald-500/20 p-4 rounded-lg">
+                    <p className="text-sm text-emerald-100 leading-relaxed animate-in fade-in">
+                      {betsRecommendation}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* REPAIRED: Active Session Registry */}
+            <div className="bg-[#0c0e18] p-6 rounded-2xl border border-slate-800">
+                <div className="flex justify-between items-center mb-4">
+                   <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+                      <Radio size={20} className="text-emerald-400"/>
+                      <span>Active Session Registry</span>
+                   </h3>
+                </div>
+
+                {sessionLog && (
+                   <div className="mb-4 bg-emerald-900/10 border border-emerald-500/20 p-3 rounded-xl animate-in fade-in">
+                      <div className="flex items-center space-x-2 text-emerald-400 mb-1">
+                         <FileText size={12} />
+                         <span className="text-xs font-bold uppercase">Clinical Log</span>
+                      </div>
+                      <p className="text-xs text-emerald-200/80 leading-relaxed whitespace-pre-line">{sessionLog}</p>
+                   </div>
+                )}
+
+                <div className="overflow-x-auto">
+                   <table className="w-full text-left text-sm">
+                      <thead className="bg-slate-900 text-slate-500 uppercase text-xs">
+                         <tr>
+                            <th className="p-3">Session ID</th>
+                            <th className="p-3">Patient Node</th>
+                            <th className="p-3">Protocol</th>
+                            <th className="p-3">Bio-Sync</th>
+                            <th className="p-3">Yield (kJ)</th>
+                            <th className="p-3 text-right">Action</th>
+                         </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-800">
+                         {activeSessions.map((sess, i) => (
+                            <tr key={i} className="hover:bg-slate-800/50 transition-colors">
+                               <td className="p-3 font-mono text-emerald-400">{sess.id}</td>
+                               <td className="p-3 font-medium text-white">{sess.patient}</td>
+                               <td className="p-3 text-slate-400">{sess.protocol}</td>
+                               <td className="p-3 font-mono text-white flex items-center">
+                                  <div className="w-16 bg-slate-700 h-1.5 rounded-full mr-2">
+                                     <div className="bg-emerald-500 h-full rounded-full" style={{ width: `${sess.bioSync}%` }} />
+                                  </div>
+                                  {sess.bioSync}%
+                               </td>
+                               <td className="p-3 font-mono text-emerald-400">+{sess.yield}</td>
+                               <td className="p-3 text-right">
+                                  <button 
+                                    onClick={() => handleGenerateSessionLog(sess)}
+                                    disabled={isGeneratingLog}
+                                    className="p-1.5 bg-slate-800 hover:bg-slate-700 text-emerald-400 rounded-lg transition-colors border border-slate-700"
+                                    title="Generate Log"
+                                  >
+                                    {isGeneratingLog ? <Loader size={14} className="animate-spin" /> : <ClipboardList size={14} />}
+                                  </button>
+                               </td>
+                            </tr>
+                         ))}
+                      </tbody>
+                   </table>
+                </div>
+            </div>
+          </div>
+        )}
+
+        {/* REGULATORY */}
+        {activeTab === 'regulatory' && (
+          <div className="space-y-6">
+             <div className="flex justify-between items-end">
+                <div>
+                  <h2 className="text-3xl font-bold text-white mb-2">Grid & Financial Regulation</h2>
+                  <p className="text-slate-400">Monitoring IoT Standards and Asset Liquidity.</p>
+                </div>
+                <div className="flex space-x-2">
+                  <button 
+                      onClick={handleScenarioSimulation}
+                      disabled={isSimulatingScenario}
+                      className="flex items-center space-x-2 bg-rose-600/20 text-rose-400 px-4 py-2 rounded-lg text-sm font-bold border border-rose-500/30 hover:bg-rose-600/30 transition-colors disabled:opacity-50"
+                    >
+                      {isSimulatingScenario ? <Loader className="animate-spin" size={16} /> : <AlertTriangle size={16} />}
+                      <span>SIMULATE EVENT</span>
+                    </button>
+                  <button 
+                      onClick={handleAuditReport}
+                      disabled={isAuditing}
+                      className="flex items-center space-x-2 bg-purple-600/20 text-purple-400 px-4 py-2 rounded-lg text-sm font-bold border border-purple-500/30 hover:bg-purple-600/30 transition-colors disabled:opacity-50"
+                    >
+                      {isAuditing ? <Loader className="animate-spin" size={16} /> : <FileText size={16} />}
+                      <span>GENERATE AUDIT</span>
+                    </button>
+                </div>
+             </div>
+
+             {/* Audit Report Display */}
+             {auditReport && (
+                <div className="bg-slate-900/80 p-6 rounded-xl border border-purple-500/30 animate-in slide-in-from-top-4">
+                  <h3 className="text-purple-400 font-bold mb-3 flex items-center space-x-2">
+                    <ShieldCheck size={18} />
+                    <span>GRID AUDIT REPORT</span>
+                  </h3>
+                  <div className="prose prose-invert prose-sm max-w-none text-slate-300">
+                    <div className="whitespace-pre-line leading-relaxed">{auditReport}</div>
+                  </div>
+                </div>
+             )}
+
+             {/* Scenario Display */}
+             {scenarioSimulation && (
+                <div className="bg-rose-950/30 p-6 rounded-xl border border-rose-500/30 animate-in slide-in-from-top-4">
+                  <h3 className="text-rose-400 font-bold mb-3 flex items-center space-x-2">
+                    <AlertTriangle size={18} />
+                    <span>BLACK SWAN SIMULATION</span>
+                  </h3>
+                  <div className="prose prose-invert prose-sm max-w-none text-rose-200">
+                    <div className="whitespace-pre-line leading-relaxed">{scenarioSimulation}</div>
+                  </div>
+                </div>
+             )}
+
+             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="bg-[#0c0e18] p-6 rounded-2xl border border-slate-800">
+                  <h3 className="text-lg font-bold text-white mb-4">Market Health Metrics</h3>
+                   <div className="h-80 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <RadarChart cx="50%" cy="50%" outerRadius="80%" data={marketMetrics}>
+                        <PolarGrid stroke="#334155" />
+                        <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 12 }} />
+                        <PolarRadiusAxis angle={30} domain={[0, 150]} tick={false} axisLine={false} />
+                        <Radar name="Market" dataKey="A" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} />
+                        <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderColor: '#1e293b' }} />
+                      </RadarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+
+                {/* REPAIRED: Compliance Log */}
+                <div className="bg-[#0c0e18] p-6 rounded-2xl border border-slate-800">
+                   <h3 className="text-lg font-bold text-white mb-4 flex items-center space-x-2">
+                      <ShieldCheck size={20} className="text-purple-400"/>
+                      <span>Compliance Event Log</span>
+                   </h3>
+
+                   {remediationPlan && (
+                      <div className="mb-4 bg-purple-900/10 border border-purple-500/20 p-3 rounded-xl animate-in fade-in">
+                          <div className="flex items-center space-x-2 text-purple-400 mb-1">
+                            <Wrench size={12} />
+                            <span className="text-xs font-bold uppercase">Remediation Plan</span>
+                          </div>
+                          <p className="text-xs text-purple-200/80 leading-relaxed whitespace-pre-line">{remediationPlan}</p>
+                      </div>
+                   )}
+
+                   <div className="space-y-3 max-h-80 overflow-y-auto pr-2">
+                      {complianceLogs.map((log, i) => (
+                         <div key={i} className="p-3 bg-slate-900 rounded-xl border border-slate-800 flex justify-between items-center">
+                            <div>
+                               <div className="text-sm font-bold text-white">{log.event}</div>
+                               <div className="text-xs text-slate-500">Node: {log.node}</div>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                               <span className={`text-xs px-2 py-1 rounded border ${
+                                  log.impact === 'High' ? 'border-rose-500/30 text-rose-400 bg-rose-500/10' : 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10'
+                               }`}>
+                                  {log.status}
+                               </span>
+                               <button 
+                                  onClick={() => handleGenerateRemediation(log)}
+                                  disabled={isGeneratingRemediation}
+                                  className="p-1.5 bg-slate-800 hover:bg-slate-700 text-purple-400 rounded-lg transition-colors border border-slate-700"
+                                  title="Suggest Fix"
+                                >
+                                  {isGeneratingRemediation ? <Loader size={14} className="animate-spin" /> : <Wrench size={14} />}
+                                </button>
+                            </div>
+                         </div>
+                      ))}
+                   </div>
+                </div>
+             </div>
+          </div>
+        )}
+
+        {/* REGISTRY (NEW TAB for completeness) */}
+        {activeTab === 'registry' && (
+          <div className="space-y-6">
+             <div className="flex justify-between items-end mb-4">
+                <div>
+                   <h1 className="text-3xl font-bold text-white mb-2">Health Ring Registry</h1>
+                   <p className="text-slate-400">Verified Network Nodes & Practitioners.</p>
+                </div>
+             </div>
+
+             {registryInsight && (
+                <div className="mb-6 bg-cyan-900/10 border border-cyan-500/20 p-4 rounded-2xl animate-in fade-in">
+                   <div className="flex items-center space-x-2 text-cyan-400 mb-2">
+                      <ShieldCheck size={18} />
+                      <span className="text-sm font-bold uppercase">Node Audit Report</span>
+                   </div>
+                   <p className="text-sm text-cyan-200 leading-relaxed font-mono whitespace-pre-line">{registryInsight}</p>
+                </div>
+             )}
+
+             <div className="bg-[#0c0e18] rounded-2xl border border-slate-800 overflow-hidden">
+                <table className="w-full text-left text-sm">
+                   <thead className="bg-slate-900 text-slate-500 uppercase text-xs">
+                      <tr>
+                         <th className="p-4">Node ID</th>
+                         <th className="p-4">Entity Name</th>
+                         <th className="p-4">Specialization</th>
+                         <th className="p-4">Status</th>
+                         <th className="p-4">Efficiency</th>
+                         <th className="p-4 text-right">Audit</th>
+                      </tr>
+                   </thead>
+                   <tbody className="divide-y divide-slate-800">
+                      {healthRingRegistry.map((entity, i) => (
+                         <tr key={i} className="hover:bg-slate-800/50 transition-colors">
+                            <td className="p-4 font-mono text-emerald-400">{entity.id}</td>
+                            <td className="p-4 font-medium text-white">{entity.name}</td>
+                            <td className="p-4 text-slate-400">{entity.specialization}</td>
+                            <td className="p-4">
+                               <span className={`px-2 py-1 rounded text-xs border ${
+                                  entity.status === 'Active' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10' :
+                                  'border-amber-500/30 text-amber-400 bg-amber-500/10'
+                               }`}>
+                                  {entity.status}
+                               </span>
+                            </td>
+                            <td className="p-4 font-mono text-emerald-400">{entity.yieldEfficiency}</td>
+                            <td className="p-4 text-right">
+                               <button 
+                                  onClick={() => handleRegistryAudit(entity)}
+                                  disabled={isAuditingRegistry}
+                                  className="p-2 bg-slate-800 hover:bg-slate-700 text-cyan-400 rounded-lg transition-colors border border-slate-700 flex items-center space-x-1 ml-auto"
+                               >
+                                  {isAuditingRegistry ? <Loader size={14} className="animate-spin" /> : <Search size={14} />}
+                                  <span className="text-xs font-bold">VERIFY NODE</span>
+                               </button>
+                            </td>
+                         </tr>
+                      ))}
+                   </tbody>
+                </table>
+             </div>
+          </div>
+        )}
+
+         {/* ASSET MINTING */}
+         {activeTab === 'minting' && (
+          <div className="space-y-6">
+            <h2 className="text-3xl font-bold text-white mb-6">Digital Asset Minting</h2>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Asset Creation Form */}
+              <div className="bg-[#0c0e18] p-6 rounded-2xl border border-slate-800">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-bold text-white">Create New Asset</h3>
+                  <button 
+                    onClick={handleGenerateAsset}
+                    disabled={isMintingAI}
+                    className="flex items-center space-x-2 bg-emerald-600/20 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-emerald-500/30 hover:bg-emerald-600/30 transition-colors disabled:opacity-50"
+                  >
+                    {isMintingAI ? <Loader className="animate-spin" size={14} /> : <Sparkles size={14} />}
+                    <span>AI AUTO-FILL</span>
+                  </button>
+                </div>
+                <div className="space-y-4">
+                   <div>
+                    <label className="block text-xs uppercase text-slate-500 mb-1">Asset Category</label>
+                    <select 
+                      value={selectedAssetType}
+                      onChange={(e) => setSelectedAssetType(e.target.value)}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-emerald-500"
+                    >
+                      <option>IoT Data Stream</option>
+                      <option>Therapeutic Script</option>
+                      <option>Financialized Algo</option>
+                      <option>Regulatory Token</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs uppercase text-slate-500 mb-1">Asset Title</label>
+                    <input 
+                      type="text" 
+                      value={assetName}
+                      onChange={(e) => setAssetName(e.target.value)}
+                      className="w-full bg-slate-900 border border-slate-700 rounded-lg p-3 text-white focus:outline-none focus:border-emerald-500" 
+                      placeholder="E.g. Bio-Yield Stream #404" 
+                    />
+                  </div>
+                  {assetDesc && (
+                    <div className="animate-in fade-in slide-in-from-top-2">
+                       <label className="block text-xs uppercase text-slate-500 mb-1">Asset Metadata</label>
+                       <textarea 
+                        value={assetDesc}
+                        readOnly
+                        className="w-full bg-slate-900/50 border border-emerald-500/30 rounded-lg p-3 text-emerald-200 text-sm h-24 focus:outline-none resize-none"
+                       />
+                    </div>
+                  )}
+
+                  <button 
+                     onClick={handleGenerateContract}
+                     disabled={isGeneratingContract}
+                     className="w-full flex items-center justify-center space-x-2 bg-slate-800 hover:bg-slate-700 text-emerald-400 font-bold py-3 rounded-lg border border-slate-700 transition-colors"
+                  >
+                     {isGeneratingContract ? <Loader className="animate-spin" size={16} /> : <Code size={16} />}
+                     <span>DRAFT CONTRACT LOGIC</span>
+                  </button>
+
+                  {contractLogic && (
+                     <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 font-mono text-xs text-emerald-500 max-h-32 overflow-y-auto">
+                        <pre>{contractLogic}</pre>
+                     </div>
+                  )}
+
+                  <button 
+                    onClick={handleMintToBlockchain}
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-lg transition-colors mt-2"
+                  >
+                    MINT TO BLOCKCHAIN
+                  </button>
+                </div>
+              </div>
+
+              {/* Asset Mint List Engine */}
+              <div className="bg-[#0c0e18] p-6 rounded-2xl border border-slate-800 flex flex-col">
+                 <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+                       <List size={20} className="text-emerald-400"/>
+                       <span>Asset Mint List Engine</span>
+                    </h3>
+                    <button 
+                      onClick={handleAssetValuation}
+                      disabled={isValuatingAssets}
+                      className="flex items-center space-x-2 bg-slate-800 hover:bg-slate-700 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-bold transition-colors disabled:opacity-50 border border-slate-700"
+                    >
+                      {isValuatingAssets ? <Loader className="animate-spin" size={14} /> : <TrendingUp size={14} />}
+                      <span>CHECK LIQUIDITY</span>
+                    </button>
+                 </div>
+
+                 {valuationInsight && (
+                     <div className="mb-4 bg-emerald-900/10 border border-emerald-500/20 p-3 rounded-xl animate-in fade-in">
+                        <div className="flex items-center space-x-2 text-emerald-400 mb-1">
+                           <Sparkles size={12} />
+                           <span className="text-xs font-bold uppercase">Liquidity Oracle</span>
+                        </div>
+                        <p className="text-xs text-emerald-200/80 leading-relaxed">{valuationInsight}</p>
+                     </div>
+                 )}
+
+                 <div className="overflow-x-auto flex-1">
+                    <table className="w-full text-left text-sm">
+                       <thead className="bg-slate-900 text-slate-500 uppercase text-xs">
+                          <tr>
+                             <th className="p-3 rounded-tl-lg">ID</th>
+                             <th className="p-3">Name</th>
+                             <th className="p-3">Value (kJ)</th>
+                             <th className="p-3 rounded-tr-lg">Status</th>
+                          </tr>
+                       </thead>
+                       <tbody className="divide-y divide-slate-800">
+                          {mintedAssets.map((asset, i) => (
+                             <tr key={i} className="hover:bg-slate-800/50 transition-colors">
+                                <td className="p-3 font-mono text-emerald-400 text-xs">{asset.id}</td>
+                                <td className="p-3">
+                                   <div className="font-medium text-white">{asset.name}</div>
+                                   <div className="text-xs text-slate-500">{asset.type}</div>
+                                </td>
+                                <td className="p-3 font-mono text-white">{asset.value.toLocaleString()}</td>
+                                <td className="p-3">
+                                   <span className={`px-2 py-1 rounded text-xs border ${
+                                      asset.status === 'Minted' ? 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10' :
+                                      asset.status === 'Staked' ? 'border-indigo-500/30 text-indigo-400 bg-indigo-500/10' :
+                                      'border-slate-600 text-slate-400'
+                                   }`}>
+                                      {asset.status}
+                                   </span>
+                                </td>
+                             </tr>
+                          ))}
+                       </tbody>
+                    </table>
+                 </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+      </main>
+    </div>
+  );
+}
+
+
