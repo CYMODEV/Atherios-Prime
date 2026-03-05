@@ -1,0 +1,647 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Activity, 
+  Cpu, 
+  ShieldCheck, 
+  Database, 
+  TrendingUp, 
+  Users, 
+  Lock, 
+  Zap, 
+  Server, 
+  Globe, 
+  HeartPulse, 
+  Code, 
+  FileText,
+  ChevronRight,
+  ArrowRight,
+  CheckCircle,
+  AlertTriangle,
+  BrainCircuit,
+  Scale
+} from 'lucide-react';
+
+// --- Components ---
+
+const Navbar = ({ activeSection, setActiveSection }) => {
+  const navItems = [
+    { id: 'home', label: 'Overview' },
+    { id: 'market', label: 'Market Opportunity' },
+    { id: 'tech', label: 'Technology' },
+    { id: 'roles', label: 'Ecosystem' },
+    { id: 'resources', label: 'Developers' },
+  ];
+
+  return (
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <div className="w-8 h-8 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center">
+            <Activity className="text-white w-5 h-5" />
+          </div>
+          <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+            AETHERIOS PRIME
+          </span>
+        </div>
+        
+        <div className="hidden md:flex space-x-8">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveSection(item.id)}
+              className={`text-sm font-medium transition-colors duration-200 ${
+                activeSection === item.id ? 'text-cyan-400' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-800 border border-slate-700">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <span className="text-xs text-slate-300 font-mono">NET: ACTIVE</span>
+          </div>
+          <button className="bg-cyan-600 hover:bg-cyan-500 text-white px-5 py-2 rounded-lg text-sm font-semibold transition-all">
+            Access Harvest Node
+          </button>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+const Hero = () => {
+  return (
+    <section className="relative pt-32 pb-20 overflow-hidden bg-slate-950">
+      {/* Background Grid */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 pointer-events-none"></div>
+      
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="inline-flex items-center space-x-2 bg-blue-900/30 border border-blue-800 text-blue-300 px-3 py-1 rounded-full text-xs font-semibold mb-6">
+              <span className="flex h-2 w-2 relative">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+              </span>
+              HEICEM PROTOCOL LIVE
+            </div>
+            <h1 className="text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
+              The Financialization of <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Intimacy</span>
+            </h1>
+            <p className="text-xl text-slate-400 mb-8 leading-relaxed max-w-2xl">
+              Transforming Erobotics from depreciating consumer hardware into high-yield IoT nodes. 
+              The <strong>Harvest Module</strong> bridges the \$107B SexTech market and the \$45T Data Economy.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <button className="flex items-center justify-center space-x-2 bg-white text-slate-900 px-8 py-4 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                <span>View Investor Deck</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button className="flex items-center justify-center space-x-2 bg-slate-800 border border-slate-700 text-white px-8 py-4 rounded-lg font-bold hover:bg-slate-700 transition-colors">
+                <span>Developer Docs</span>
+                <Code className="w-4 h-4 text-cyan-400" />
+              </button>
+            </div>
+          </div>
+
+          {/* Abstract Visualization of the Triple Yield */}
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 blur-3xl rounded-full"></div>
+            <div className="relative bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-white font-semibold">Live Node Telemetry</h3>
+                <span className="text-xs font-mono text-green-400">kJ MINTING ACTIVE</span>
+              </div>
+              
+              <div className="space-y-6">
+                {/* Metric 1 */}
+                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm text-slate-400 flex items-center gap-2">
+                      <TrendingUp className="w-4 h-4 text-cyan-400" /> Financial Yield
+                    </span>
+                    <span className="text-cyan-400 font-mono font-bold">+245 kJ</span>
+                  </div>
+                  <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                    <div className="h-full bg-cyan-500 w-[75%]"></div>
+                  </div>
+                </div>
+
+                {/* Metric 2 */}
+                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm text-slate-400 flex items-center gap-2">
+                      <HeartPulse className="w-4 h-4 text-pink-500" /> Therapeutic Yield
+                    </span>
+                    <span className="text-pink-400 font-mono font-bold">98% Coherence</span>
+                  </div>
+                  <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                    <div className="h-full bg-pink-500 w-[92%]"></div>
+                  </div>
+                </div>
+
+                {/* Metric 3 */}
+                <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                  <div className="flex justify-between mb-2">
+                    <span className="text-sm text-slate-400 flex items-center gap-2">
+                      <Database className="w-4 h-4 text-purple-400" /> Asset Yield (Data)
+                    </span>
+                    <span className="text-purple-400 font-mono font-bold">Golden Dataset</span>
+                  </div>
+                  <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+                    <div className="h-full bg-purple-500 w-[60%]"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const ValueProps = () => {
+  return (
+    <section id="home" className="py-20 bg-slate-900 border-t border-slate-800">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold text-white mb-4">The Triple-Yield Protocol</h2>
+          <p className="text-slate-400 max-w-2xl mx-auto">
+            Aetherios Prime solves the asset illiquidity problem of SexTech by converting hardware into
+            productive capital assets through three distinct yield streams.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 hover:border-cyan-500/50 transition-colors group">
+            <div className="w-14 h-14 bg-cyan-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <TrendingUp className="w-8 h-8 text-cyan-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">Financial Yield</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              <strong>Mining Intimacy:</strong> Earn kJ tokens by generating high-fidelity bio-data. 
+              Load-balancing logic maximizes throughput without overheating hardware.
+            </p>
+          </div>
+
+          <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 hover:border-pink-500/50 transition-colors group">
+            <div className="w-14 h-14 bg-pink-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <HeartPulse className="w-8 h-8 text-pink-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">Therapeutic Yield</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              <strong>BETS Standard:</strong> Bio-Energetic Therapeutic System. 
+              Standardized frequency emitters (e.g., 432Hz) create verified clinical outcomes for the "Health Ring."
+            </p>
+          </div>
+
+          <div className="bg-slate-950 p-8 rounded-2xl border border-slate-800 hover:border-purple-500/50 transition-colors group">
+            <div className="w-14 h-14 bg-purple-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Lock className="w-8 h-8 text-purple-400" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-3">Asset Yield</h3>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              <strong>Real World Assets (RWA):</strong> Securitize interaction patterns. 
+              Stake physical Erobots in the Agent Nexus to earn passive grid tax, creating "Liquid Intimacy."
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const MarketOpportunity = () => {
+  return (
+    <section id="market" className="py-20 bg-slate-950">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div>
+            <h2 className="text-3xl font-bold text-white mb-6">Market Value & The "Golden Dataset" Crisis</h2>
+            <p className="text-slate-400 mb-6">
+              AI models are hitting a wall. The scarcity of high-quality, human-annotated emotional data 
+              is the critical bottleneck for next-gen Affective Computing. Aetherios Prime captures 
+              value at the intersection of four hyper-growth sectors.
+            </p>
+            
+            <ul className="space-y-4">
+              <li className="flex items-start">
+                <CheckCircle className="w-6 h-6 text-cyan-500 mr-3 shrink-0" />
+                <div>
+                  <h4 className="text-white font-semibold">IoT Data Monetization</h4>
+                  <p className="text-slate-400 text-sm">Projected \$45.46 Trillion by 2034. Shift from hardware sales to outcome sales.</p>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="w-6 h-6 text-cyan-500 mr-3 shrink-0" />
+                <div>
+                  <h4 className="text-white font-semibold">SexTech & Erobotics</h4>
+                  <p className="text-slate-400 text-sm">\$107B market by 2030. High demand for Al companions.</p>
+                </div>
+              </li>
+              <li className="flex items-start">
+                <CheckCircle className="w-6 h-6 text-cyan-500 mr-3 shrink-0" />
+                <div>
+                  <h4 className="text-white font-semibold">Affective Computing</h4>
+                  <p className="text-slate-400 text-sm">Desperate for "Golden Datasets" to train RLHF models.</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-slate-900 p-8 rounded-2xl border border-slate-800">
+            <h3 className="text-white font-bold mb-6">Addressable Market Growth</h3>
+            
+            <div className="space-y-6">
+              <div>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-slate-300">IoT Data Economy (2034)</span>
+                  <span className="text-cyan-400 font-bold">\$45.46T</span>
+                </div>
+                <div className="h-4 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-cyan-600 to-cyan-400 w-full"></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-slate-300">AI Companions (2035)</span>
+                  <span className="text-purple-400 font-bold">\$552B</span>
+                </div>
+                <div className="h-4 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-purple-600 to-purple-400 w-[15%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="text-slate-300">SexTech Market (2030)</span>
+                  <span className="text-pink-400 font-bold">\$107B</span>
+                </div>
+                <div className="h-4 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="h-full bg-gradient-to-r from-pink-600 to-pink-400 w-[5%]"></div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 pt-8 border-t border-slate-800">
+              <div className="flex items-center space-x-4 bg-yellow-900/20 border border-yellow-700/50 p-4 rounded-lg">
+                <AlertTriangle className="text-yellow-500 w-8 h-8 shrink-0" />
+                <div>
+                  <h4 className="text-yellow-400 font-bold text-sm">The "Aetherios Gap"</h4>
+                  <p className="text-slate-400 text-xs mt-1">
+                    Current market failure: High-fidelity emotional data is totally illiquid. 
+                    Aetherios Prime is the only platform securitizing this specific asset class.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Technology = () => {
+  return (
+    <section id="tech" className="py-20 bg-slate-900 border-y border-slate-800">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl font-bold text-white mb-4">Architecture & Data Flow</h2>
+          <p className="text-slate-400">Powered by the Gemini Multimodal API and Edge Compute</p>
+        </div>
+
+        {/* Technical Diagram Construction */}
+        <div className="relative">
+          {/* Connector Line */}
+          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-slate-800 -translate-y-1/2 z-0"></div>
+
+          <div className="grid lg:grid-cols-4 gap-6 relative z-10">
+            
+            {/* Step 1: Hardware */}
+            <div className="bg-slate-950 p-6 rounded-xl border border-slate-700 shadow-xl">
+              <div className="flex justify-between items-start mb-4">
+                <Cpu className="text-cyan-400 w-8 h-8" />
+                <span className="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">Tier 1</span>
+              </div>
+              <h3 className="text-white font-bold mb-2">Edge Node</h3>
+              <ul className="text-slate-400 text-xs space-y-2">
+                <li>• NVIDIA Jetson Module</li>
+                <li>• GSR & PPG Sensors</li>
+                <li>• Local "Node Optimization Agent"</li>
+              </ul>
+            </div>
+
+            {/* Step 2: Consent */}
+            <div className="bg-slate-950 p-6 rounded-xl border-2 border-green-500/30 shadow-xl shadow-green-900/10">
+              <div className="flex justify-between items-start mb-4">
+                <ShieldCheck className="text-green-400 w-8 h-8" />
+                <span className="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">Sentinel</span>
+              </div>
+              <h3 className="text-white font-bold mb-2">Consent Sentinel</h3>
+              <ul className="text-slate-400 text-xs space-y-2">
+                <li>• <strong>EU AI Act Compliant</strong></li>
+                <li>• Double-Opt-In Mechanism</li>
+                <li>• ZK Proofs (Privacy Audit)</li>
+              </ul>
+            </div>
+
+            {/* Step 3: Analysis */}
+            <div className="bg-slate-950 p-6 rounded-xl border border-slate-700 shadow-xl">
+              <div className="flex justify-between items-start mb-4">
+                <BrainCircuit className="text-purple-400 w-8 h-8" />
+                <span className="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">Tier 2</span>
+              </div>
+              <h3 className="text-white font-bold mb-2">Harvest Engine</h3>
+              <ul className="text-slate-400 text-xs space-y-2">
+                <li>• Gemini Multimodal Live API</li>
+                <li>• HEICEM Protocol Logic</li>
+                <li>• Co-Evolution Scoring</li>
+              </ul>
+            </div>
+
+            {/* Step 4: Blockchain */}
+            <div className="bg-slate-950 p-6 rounded-xl border border-slate-700 shadow-xl">
+              <div className="flex justify-between items-start mb-4">
+                <Zap className="text-yellow-400 w-8 h-8" />
+                <span className="text-xs bg-slate-800 text-slate-300 px-2 py-1 rounded">Tier 3</span>
+              </div>
+              <h3 className="text-white font-bold mb-2">Asset Mint Engine</h3>
+              <ul className="text-slate-400 text-xs space-y-2">
+                <li>• Smart Contract Architect</li>
+                <li>• kJ Token Minting</li>
+                <li>• Peaq / IoTeX Layer 1</li>
+              </ul>
+            </div>
+
+          </div>
+        </div>
+
+        <div className="mt-12 bg-slate-800/30 rounded-xl p-6 border border-slate-800 flex flex-col md:flex-row gap-6 items-center">
+            <div className="p-3 bg-blue-900/20 rounded-lg">
+                <Server className="text-blue-400 w-6 h-6" />
+            </div>
+            <div>
+                <h4 className="text-white font-bold">Why Edge Compute?</h4>
+                <p className="text-slate-400 text-sm">
+                    Processing high-definition video in the cloud is prohibitively expensive. 
+                    By filtering and processing data at the edge, Aetherios reduces inference costs, 
+                    making the "Harvest" economically viable while ensuring sub-millisecond haptic latency.
+                </p>
+            </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Ecosystem = () => {
+  const [activeTab, setActiveTab] = useState('miners');
+
+  const content = {
+    miners: {
+      title: "For Data Miners",
+      desc: "Turn your hardware into an investment vehicle.",
+      points: [
+        "Monitor Yield Rate (kJ/hr) via Dashboard",
+        "Use Portfolio Strategist AI to balance 'Financial' vs 'Therapeutic' bots",
+        "Load-balancing logic prevents hardware overheating"
+      ],
+      icon: <Database className="w-12 h-12 text-cyan-400" />
+    },
+    healers: {
+      title: "For Health Ring Practitioners",
+      desc: "Distribute digital therapeutics (DTx) with clinical precision.",
+      points: [
+        "Script Creation: Program haptics & 432Hz emitters",
+        "Remote Monitoring of patient bio-feedback (HRV, GSR)",
+        "Earn premiums for 'Certified' therapeutic assets"
+      ],
+      icon: <HeartPulse className="w-12 h-12 text-pink-400" />
+    },
+    institutions: {
+      title: "For Institutional Buyers",
+      desc: "Access longitudinal studies as a service.",
+      points: [
+        "Purchase 'Golden Datasets' for Emotion AI training",
+        "Access Co-Evolution Analytics (6-month adaptation data)",
+        "Data DAO governance ensures ethical sourcing"
+      ],
+      icon: <Globe className="w-12 h-12 text-purple-400" />
+    }
+  };
+
+  return (
+    <section id="roles" className="py-20 bg-slate-950">
+      <div className="max-w-7xl mx-auto px-6">
+        <h2 className="text-3xl font-bold text-white mb-12 text-center">Ecosystem Participants</h2>
+        
+        <div className="flex flex-col md:flex-row gap-8">
+          <div className="md:w-1/3 space-y-2">
+            {Object.keys(content).map((key) => (
+              <button
+                key={key}
+                onClick={() => setActiveTab(key)}
+                className={`w-full text-left p-4 rounded-xl transition-all border ${
+                  activeTab === key 
+                    ? 'bg-slate-800 border-cyan-500 text-white' 
+                    : 'bg-transparent border-transparent text-slate-500 hover:bg-slate-900'
+                }`}
+              >
+                <span className="font-bold text-lg block mb-1">{content[key].title}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="md:w-2/3 bg-slate-900 p-8 rounded-2xl border border-slate-800 min-h-[300px]">
+            <div className="flex items-center gap-4 mb-6">
+              {content[activeTab].icon}
+              <h3 className="text-2xl font-bold text-white">{content[activeTab].title}</h3>
+            </div>
+            <p className="text-slate-300 text-lg mb-8">{content[activeTab].desc}</p>
+            <ul className="space-y-4">
+              {content[activeTab].points.map((point, index) => (
+                <li key={index} className="flex items-start text-slate-400">
+                  <ChevronRight className="w-5 h-5 text-cyan-500 mr-2 shrink-0" />
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const DeveloperResources = () => {
+  return (
+    <section id="resources" className="py-20 bg-slate-900 border-t border-slate-800">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex flex-col lg:flex-row justify-between items-end mb-12">
+          <div>
+            <h2 className="text-3xl font-bold text-white mb-4">Developer Resources</h2>
+            <p className="text-slate-400">Build on the HEICEM Protocol and Asset Mint List Engine.</p>
+          </div>
+          <button className="mt-4 lg:mt-0 bg-white text-slate-900 px-6 py-3 rounded-lg font-bold hover:bg-slate-200 transition-colors">
+            Read the Whitepaper
+          </button>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="group bg-slate-950 p-6 rounded-xl border border-slate-800 hover:border-cyan-500 transition-all cursor-pointer">
+            <div className="flex justify-between items-center mb-4">
+              <FileText className="text-cyan-400 w-8 h-8" />
+              <ArrowRight className="text-slate-600 group-hover:text-cyan-400 transition-colors" />
+            </div>
+            <h3 className="text-white font-bold mb-2">Smart Contract Architect</h3>
+            <p className="text-slate-400 text-sm">
+              Templates for "Liquid Staking" and fractionalizing Erobots. 
+              Documentation for connecting to Peaq/IoTeX networks.
+            </p>
+          </div>
+
+          <div className="group bg-slate-950 p-6 rounded-xl border border-slate-800 hover:border-pink-500 transition-all cursor-pointer">
+            <div className="flex justify-between items-center mb-4">
+              <Code className="text-pink-400 w-8 h-8" />
+              <ArrowRight className="text-slate-600 group-hover:text-pink-400 transition-colors" />
+            </div>
+            <h3 className="text-white font-bold mb-2">BETS SDK</h3>
+            <p className="text-slate-400 text-sm">
+              Standardized API for controlling haptics, heating, and 432Hz frequency emitters. 
+              Ensure your therapeutic scripts are hardware-agnostic.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const IPDisclosure = () => {
+  return (
+    <section className="py-12 bg-slate-900 border-t border-slate-800">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="bg-blue-900/10 border border-blue-800/50 rounded-xl p-8">
+            <div className="flex items-start gap-4">
+                <div className="p-3 bg-blue-900/20 rounded-lg shrink-0">
+                    <Scale className="text-blue-400 w-6 h-6" />
+                </div>
+                <div>
+                    <h3 className="text-xl font-bold text-white mb-2">Intellectual Property & Patent Disclosure</h3>
+                    <p className="text-slate-400 text-sm mb-6">
+                        Aetherios Prime is actively securing protection for its core technologies. The following systems are currently under patent pending status or have been flagged for proprietary classification:
+                    </p>
+                    <div className="grid md:grid-cols-2 gap-6">
+                        <div className="space-y-3">
+                             <h4 className="text-white font-semibold flex items-center gap-2">
+                                <FileText className="w-4 h-4 text-cyan-500" />
+                                Patent Pending Technologies
+                             </h4>
+                             <ul className="text-slate-400 text-sm space-y-2 pl-6 list-disc marker:text-cyan-500">
+                                <li><strong>Bio-to-Token Conversion Algorithm:</strong> Method for quantifying physiological feedback (HRV, GSR) into fungible cryptographic assets (kJ).</li>
+                                <li><strong>Smart Contract Architect:</strong> System for the fractionalized ownership and liquid staking of intimate robotic hardware (RWA).</li>
+                             </ul>
+                        </div>
+                        <div className="space-y-3">
+                             <h4 className="text-white font-semibold flex items-center gap-2">
+                                <Lock className="w-4 h-4 text-purple-500" />
+                                Trademarks & Copyrights
+                             </h4>
+                             <ul className="text-slate-400 text-sm space-y-2 pl-6 list-disc marker:text-purple-500">
+                                <li><strong>HEICEM Protocol™:</strong> Human-Erobot Interaction and Co-evolution Model data schemas.</li>
+                                <li><strong>BETS Standard©:</strong> Bio-Energetic Therapeutic System frequency scripts and haptic drivers.</li>
+                             </ul>
+                        </div>
+                    </div>
+                    <div className="mt-6 pt-6 border-t border-slate-700/50">
+                        <p className="text-xs text-slate-500 italic">
+                            This disclosure is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy any securities or tokens. All intellectual property rights are reserved by Aetherios Prime Holdings.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+const Footer = () => {
+  return (
+    <footer className="bg-slate-950 border-t border-slate-800 py-12">
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-8 mb-8">
+        <div className="col-span-1 md:col-span-2">
+          <div className="flex items-center space-x-2 mb-4">
+            <Activity className="text-cyan-500 w-6 h-6" />
+            <span className="text-lg font-bold text-white">AETHERIOS PRIME</span>
+          </div>
+          <p className="text-slate-500 text-sm max-w-sm">
+            Operationalizing the Human-Erobot Interaction and Co-evolution Model (HEICEM) 
+            into a unified economic engine.
+          </p>
+        </div>
+        
+        <div>
+          <h4 className="text-white font-bold mb-4">Platform</h4>
+          <ul className="space-y-2 text-sm text-slate-500">
+            <li className="hover:text-cyan-400 cursor-pointer">Harvest Module</li>
+            <li className="hover:text-cyan-400 cursor-pointer">Agent Nexus</li>
+            <li className="hover:text-cyan-400 cursor-pointer">kJ Tokenomics</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 className="text-white font-bold mb-4">Compliance</h4>
+          <ul className="space-y-2 text-sm text-slate-500">
+            <li className="hover:text-cyan-400 cursor-pointer">EU AI Act Statement</li>
+            <li className="hover:text-cyan-400 cursor-pointer">GDPR Data Rights</li>
+            <li className="hover:text-cyan-400 cursor-pointer">Consent Sentinel</li>
+          </ul>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-6 border-t border-slate-800 pt-8 text-center md:text-left text-xs text-slate-600">
+        <p>&copy; 2026 Aetherios Prime. All rights reserved. "Erobot" and "HEICEM" are registered trademarks.</p>
+        <p className="mt-2">
+          Disclaimer: kJ tokens are utility tokens within the Aetherios ecosystem. 
+          Staking involves risk. Consult the "Consent & Privacy Sentinel" documentation for data usage policies.
+        </p>
+      </div>
+    </footer>
+  );
+};
+
+// --- Main App ---
+
+export default function App() {
+  const [activeSection, setActiveSection] = useState('home');
+
+  // Smooth scroll handler
+  useEffect(() => {
+    const element = document.getElementById(activeSection);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [activeSection]);
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-cyan-500/30">
+      <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
+      <Hero />
+      <ValueProps />
+      <MarketOpportunity />
+      <Technology />
+      <Ecosystem />
+      <DeveloperResources />
+      <IPDisclosure />
+      <Footer />
+    </div>
+  );
+}
+
+
